@@ -119,7 +119,7 @@ namespace OAF
 			OrderedSet& operator-= (const int);
 			
 			//A rendezett halmaz tartalmának átültetése ostream-be
-			friend std::ostream& operator<< (std::ostream&, const OrderedSet&);
+			friend std::ostream& operator<< (std::ostream&, OrderedSet const&);
 			//A rendezett halmaz beolvasása egyben  ostream-ből
 			friend std::istream& operator>> (std::istream&, OrderedSet&);
 			
@@ -127,12 +127,12 @@ namespace OAF
 			OrderedSet& operator=(const OrderedSet&);
 			
 			//Két halmaz összehasonlítása. Kommutatív.
-			bool operator!=(OrderedSet const&);
-			bool operator==(OrderedSet const&);
+			bool operator!=(OrderedSet const&) const;
+			bool operator==(OrderedSet const&) const;
 			
 			//OrderedSet és std::set összehasonlítása Kommutatív.
-			bool operator!=(std::set<int> const&);
-			bool operator==(std::set<int> const&);
+			bool operator!=(std::set<int> const&) const;
+			bool operator==(std::set<int> const&) const;
 			friend bool operator!=(std::set<int> const&, OrderedSet const&);
 			friend bool operator==(std::set<int> const&, OrderedSet const&);
 			
@@ -144,10 +144,11 @@ namespace OAF
 	Az STL által a bidirectional iterator-hoz előírt metódusai implementálva vannak.*/
 	class OrderedSetIterator : std::iterator< std::bidirectional_iterator_tag, int >
 	{
-		public:
+		private:
 			//Az aktuálisan mutatott listaelemre mutató pointer
-			OAF::OrderedSet::OSNode* curent;
-			
+			OAF::OrderedSet::OSNode* _curent;
+		public:
+			friend class OrderedSet;
 			//A konstrktorok
 			OrderedSetIterator();
 			OrderedSetIterator(OrderedSet);

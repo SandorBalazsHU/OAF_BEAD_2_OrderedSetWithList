@@ -5,9 +5,11 @@
 //Feladat: Rendezett fejelemes aciklikus egyirányú láncolt listaként ábrázolt halmaz egészekre.
 //Sándor Balézs - AZA6NL
 
-//Az OSNode struct metódusai
-OAF::OrderedSet::OSNode:: OSNode() : next(NULL), prev(NULL), value(0){}
-OAF::OrderedSet::OSNode:: OSNode(OSNode* next, OSNode* prev, int value) : next(next), prev(prev), value(value){}
+namespace OAF
+{
+	//Az OSNode struct metódusai
+	OAF::OrderedSet::OSNode:: OSNode() : next(NULL), prev(NULL), value(0){}
+	OAF::OrderedSet::OSNode:: OSNode(OSNode* next, OSNode* prev, int value) : next(next), prev(prev), value(value){}
 
 
 //Az OrderedSet osztály metódusai
@@ -91,11 +93,11 @@ OAF::OrderedSet::OSNode:: OSNode(OSNode* next, OSNode* prev, int value) : next(n
 	//ITERATOR - Az utolsó elemre mutató iterátorral tér vissza
 	OAF::OrderedSet::iterator OAF::OrderedSet::end()
 	{
-		return iterator(_head->prev);
+		return iterator(_head);
 	}
 	OAF::OrderedSet::const_iterator OAF::OrderedSet::end() const
 	{
-		return const_iterator(_head->prev);
+		return const_iterator(_head);
 	}
 	//Egy elemet töröl
 	OAF::OrderedSet& OAF::OrderedSet::erase(const int& x)
@@ -122,7 +124,7 @@ OAF::OrderedSet::OSNode:: OSNode(OSNode* next, OSNode* prev, int value) : next(n
 		{
 			++it;
 		}
-		if(it == end() && *it != x){it.value = NULL;}
+		if(it == end() && *it != x){it._curent = NULL;}
 		return it;
 	}
 	//Egy elem hozzáasdása létező listához
@@ -136,10 +138,10 @@ OAF::OrderedSet::OSNode:: OSNode(OSNode* next, OSNode* prev, int value) : next(n
 		if(pointer->next->value != x || pointer->next == _head)
 		{
 			OSNode* newNode = new OSNode(pointer->next, pointer, x);
-			pointer->next = newNode;
 			pointer->next->prev = newNode;
+			pointer->next = newNode;
+			++_size;
 		}
-		++_size;
 		return *this;
 	}
 	//Megadja, hogy egy szám eleme-e a halmaznak
@@ -237,12 +239,24 @@ OAF::OrderedSet::OSNode:: OSNode(OSNode* next, OSNode* prev, int value) : next(n
 	}
 			
 	//A rendezett halmaz tartalmának átültetése ostream-be
-	std::ostream& operator<< (std::ostream& str, const OAF::OrderedSet& set)
+	std::ostream& operator<< (std::ostream& os, OAF::OrderedSet const& set)
 	{
-		//---------------------KÉSŐBB---------------------------------
+		os << "{ " ;
+		for (OAF::OrderedSet::iterator it = set.begin(); it != set.end(); ++it)
+		{
+			if(it != set.end())
+			{
+				os << *it << ",";
+			}
+			else
+			{
+				os << *it << " }";
+			}
+		}
+		return os << " }\n";
 	}
 	//A rendezett halmaz beolvasása egyben  ostream-ből
-	std::istream& operator>> (std::istream& str, OAF::OrderedSet& set)
+	std::istream& operator>> (std::istream& os, OAF::OrderedSet& set)
 	{
 		//---------------------KÉSŐBB---------------------------------
 	}
@@ -256,7 +270,7 @@ OAF::OrderedSet::OSNode:: OSNode(OSNode* next, OSNode* prev, int value) : next(n
 	}
 	
 	//Két halmaz összehasonlítása
-	bool OAF::OrderedSet::operator==(OrderedSet const& set)
+	bool OAF::OrderedSet::operator==(OrderedSet const& set)  const
 	{
 		if(_size != set.size())
 		{
@@ -276,11 +290,11 @@ OAF::OrderedSet::OSNode:: OSNode(OSNode* next, OSNode* prev, int value) : next(n
 			return l;
 		}
 	}
-	bool OAF::OrderedSet::operator!=(OrderedSet const& set)
+	bool OAF::OrderedSet::operator!=(OrderedSet const& set) const
 	{
 		return !operator==(set);
 	}
-	bool OAF::OrderedSet::operator==(std::set<int> const& set)
+	bool OAF::OrderedSet::operator==(std::set<int> const& set) const
 	{
 		if(_size != set.size())
 		{
@@ -301,7 +315,7 @@ OAF::OrderedSet::OSNode:: OSNode(OSNode* next, OSNode* prev, int value) : next(n
 		}
 	}
 	//OrderedSet és std::set összehasonlítása
-	bool OAF::OrderedSet::operator!=(std::set<int> const& set)
+	bool OAF::OrderedSet::operator!=(std::set<int> const& set)  const
 	{
 		return !operator==(set);
 	}
@@ -326,54 +340,49 @@ OAF::OrderedSet::OSNode:: OSNode(OSNode* next, OSNode* prev, int value) : next(n
 	}
 	
 //OrderedSetIterator osztály metódusai
-	//X a;
-	OAF::OrderedSetIterator::OrderedSetIterator(){}
-	//X b(a)
-	OAF::OrderedSetIterator::OrderedSetIterator(OrderedSet set) : curent(set._head){}
-	//X b(a)
-	OAF::OrderedSetIterator::OrderedSetIterator(OAF::OrderedSet::OSNode* node) : curent(node){}
-	//a == b
+	OAF::OrderedSetIterator::OrderedSetIterator() : _curent(NULL) {}
+	OAF::OrderedSetIterator::OrderedSetIterator(OrderedSet set) : _curent(set._head){}
+	OAF::OrderedSetIterator::OrderedSetIterator(OAF::OrderedSet::OSNode* node) : _curent(node){}
 	bool OAF::OrderedSetIterator::operator== (OAF::OrderedSet::iterator const& setA)
 	{
-		return curent == setA.curent;
+		return _curent == setA._curent;
 	}
 	bool OAF::OrderedSetIterator::operator!= (OAF::OrderedSet::iterator const& setA)
 	{
-		return curent != setA.curent;
+		return _curent != setA._curent;
 	}
-	//*a
 	int& OAF::OrderedSetIterator::operator*() const
 	{
-		return curent->value;
+		return _curent->value;
 	}
-	//a->m
 	int* OAF::OrderedSetIterator::operator->() const
 	{
-		return &curent->value;
+		return &_curent->value;
 	}
-	//++a prefix++
 	OAF::OrderedSet::iterator& OAF::OrderedSetIterator::operator++ ()
 	{
-		curent = curent->next;
+		_curent = _curent->next;
+		return *this;
 	}
-	//a++ postfix++	
 	OAF::OrderedSet::iterator& OAF::OrderedSetIterator::operator++ (int n)
 	{
 		for(int i = 0; i < n; ++i)
 		{
-			curent = curent->next;
+			_curent = _curent->next;
 		}
+		return *this;
 	}
-	//--a prefix--
 	OAF::OrderedSet::iterator& OAF::OrderedSetIterator::operator-- ()
 	{
-		curent = curent->prev;
+		_curent = _curent->prev;
+		return *this;
 	}
-	//a-- postfix--
 	OAF::OrderedSet::iterator& OAF::OrderedSetIterator::operator-- (int n)
 	{
 		for(int i = 0; i < n; ++i)
 		{
-			curent = curent->prev;
+			_curent = _curent->prev;
 		}
+		return *this;
 	}
+}

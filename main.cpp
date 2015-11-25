@@ -1,23 +1,26 @@
-#include "PolynomConsole.h"
+#include "OrderedSet.h"
 #include <iostream>
 #include <Windows.h>
-#include <string>
-#include <sstream>
-#include <vector>
-#include <cstdlib>
-#include "PolynomConsole.h"
 //Objektum elvû alkalmazások fejesztése gyakorlat 1. beadandó
 //Sándor Balázs - AZA6NL
 
 int main()
 {
 	//Képernyõbeállítások
-	SetConsoleOutputCP(65001);
 	system("color 1f");
-	std::cout << "Adj meg egy kifejezést valós eggyütthatós polinomok között:\n" <<
-	"(Szóközzel elválasztva add meg az együtthatókat fokszám szerint övekvõ rendben)" <<
-	"\nÉrtelmezett kommutatív mûveletek:\n\tPOLINOM+POLINOM\n\tPOLINOM*POLINOM\n\tPOLINOM+VALÓS\n\tPOLINOM*VALÓS" <<
-	std::endl;
-	PolynomConsole::readExpression();
+	OAF::OrderedSet* set = new OAF::OrderedSet();
+	set->insert(12);
+	set->insert(11);
+	set->insert(10);
+	set->insert(9);
+	set->insert(8);
+	set->insert(7);
+	set->insert(6);
+	set->insert(5);
+	set->insert(4);
+	set->insert(3);
+	set->insert(2);
+	set->insert(1);
+	std::cout << *set << std::endl;
     return 0;
 }
