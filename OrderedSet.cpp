@@ -158,22 +158,22 @@ OAF::OrderedSet::OSNode:: OSNode(OSNode* next, OSNode* prev, int value) : next(n
 	//Két halmaz uniója
 	OAF::OrderedSet OAF::OrderedSet::uni(const OrderedSet& set) const
 	{
-		
+		//---------------------KÉSŐBB---------------------------------
 	}
 	//Két halmaz különbsége
 	OAF::OrderedSet OAF::OrderedSet::min(const OrderedSet& set) const
 	{
-		
+		//---------------------KÉSŐBB---------------------------------
 	}
 	//Két halmaz uniója
 	OAF::OrderedSet OAF::OrderedSet::uni(const std::set<int>& set) const
 	{
-		
+		//---------------------KÉSŐBB---------------------------------
 	}
 	//Két halmaz különbsége
 	OAF::OrderedSet OAF::OrderedSet::min(const std::set<int>& set) const
 	{
-		
+		//---------------------KÉSŐBB---------------------------------
 	}
 //Operátorok
 	//Két halmaz uniója +operátorral. Kommutatív
@@ -239,12 +239,12 @@ OAF::OrderedSet::OSNode:: OSNode(OSNode* next, OSNode* prev, int value) : next(n
 	//A rendezett halmaz tartalmának átültetése ostream-be
 	std::ostream& operator<< (std::ostream& str, const OAF::OrderedSet& set)
 	{
-		
+		//---------------------KÉSŐBB---------------------------------
 	}
 	//A rendezett halmaz beolvasása egyben  ostream-ből
 	std::istream& operator>> (std::istream& str, OAF::OrderedSet& set)
 	{
-		
+		//---------------------KÉSŐBB---------------------------------
 	}
 	
 	//Értékadó operátor
@@ -252,32 +252,66 @@ OAF::OrderedSet::OSNode:: OSNode(OSNode* next, OSNode* prev, int value) : next(n
 	{
 		_size = set.size();
 		_head = set._head;
+		return *this;
 	}
 	
 	//Két halmaz összehasonlítása
-	bool OAF::OrderedSet::operator!=(OrderedSet const&)
+	bool OAF::OrderedSet::operator==(OrderedSet const& set)
 	{
-		
+		if(_size != set.size())
+		{
+			return false;
+		}
+		else
+		{
+			bool l = true;
+			iterator it = begin();
+			iterator it2 = set.begin();
+			while (it != end())
+			{
+				if (*it != *it2) l = false;
+				++it;
+				++it2;
+			}
+			return l;
+		}
 	}
-	bool OAF::OrderedSet::operator==(OrderedSet const&)
+	bool OAF::OrderedSet::operator!=(OrderedSet const& set)
 	{
-		
+		return !operator==(set);
+	}
+	bool OAF::OrderedSet::operator==(std::set<int> const& set)
+	{
+		if(_size != set.size())
+		{
+			return false;
+		}
+		else
+		{
+			bool l = true;
+			iterator it = begin();
+			std::set<int>::iterator it2 = set.begin();
+			while (it != end())
+			{
+				if (*it != *it2) l = false;
+				++it;
+				++it2;
+			}
+			return l;
+		}
 	}
 	//OrderedSet és std::set összehasonlítása
-	bool OAF::OrderedSet::operator!=(std::set<int> const&)
+	bool OAF::OrderedSet::operator!=(std::set<int> const& set)
 	{
-		
+		return !operator==(set);
 	}
-	bool OAF::OrderedSet::operator==(std::set<int> const&)
+	bool operator==(std::set<int> const& setA, OAF::OrderedSet const& setB)
 	{
-		
+		return setB==setA;
 	}
-	bool operator!=(std::set<int> const&, OAF::OrderedSet const&)
+	bool operator!=(std::set<int> const& setA, OAF::OrderedSet const& setB)
 	{
-		
-	}
-	bool operator==(std::set<int> const&, OAF::OrderedSet const&){
-		
+		return setB!=setA;
 	}
 	
 	//Destruktor
@@ -290,8 +324,7 @@ OAF::OrderedSet::OSNode:: OSNode(OSNode* next, OSNode* prev, int value) : next(n
 		}
 		delete _head;
 	}
-			
-			
+	
 //OrderedSetIterator osztály metódusai
 	//X a;
 	OAF::OrderedSetIterator::OrderedSetIterator(){}
