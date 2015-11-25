@@ -74,13 +74,14 @@ OAF::OrderedSet::OSNode:: OSNode(OSNode* next, OSNode* prev, int value) : next(n
 		return iterator(_head->next);
 	}
 	//Minden elemet töröl
-	void OAF::OrderedSet::clear()
+	OAF::OrderedSet&  OAF::OrderedSet::clear()
 	{
 		for (iterator it = begin(); it != end(); ++it)
 		{
 			erase(*it);
 		}
 		_size = 0;
+		return *this;
 	}
 	//Megadja, hogy a halmaz üres-e
 	bool OAF::OrderedSet::empty() const
@@ -97,7 +98,7 @@ OAF::OrderedSet::OSNode:: OSNode(OSNode* next, OSNode* prev, int value) : next(n
 		return const_iterator(_head->prev);
 	}
 	//Egy elemet töröl
-	void OAF::OrderedSet::erase(const int& x)
+	OAF::OrderedSet& OAF::OrderedSet::erase(const int& x)
 	{
 		OSNode* pointer = _head->next;
 		while(pointer->next != _head && pointer->value != x)
@@ -111,6 +112,7 @@ OAF::OrderedSet::OSNode:: OSNode(OSNode* next, OSNode* prev, int value) : next(n
 			delete pointer;
 		}
 		--_size;
+		return *this;
 	}
 	//Megkeres egy elemet és visszaad egy rámutató iterátort
 	OAF::OrderedSet::iterator OAF::OrderedSet::find(const int& x) const
@@ -124,7 +126,7 @@ OAF::OrderedSet::OSNode:: OSNode(OSNode* next, OSNode* prev, int value) : next(n
 		return it;
 	}
 	//Egy elem hozzáasdása létező listához
-	void OAF::OrderedSet::insert(const int x)
+	OAF::OrderedSet& OAF::OrderedSet::insert(const int x)
 	{
 		OSNode* pointer = _head->next;
 		while((pointer->next != _head)&&(pointer->value < x))
@@ -138,6 +140,7 @@ OAF::OrderedSet::OSNode:: OSNode(OSNode* next, OSNode* prev, int value) : next(n
 			pointer->next->prev = newNode;
 		}
 		++_size;
+		return *this;
 	}
 	//Megadja, hogy egy szám eleme-e a halmaznak
 	bool OAF::OrderedSet::isElement(int x) const
@@ -176,67 +179,61 @@ OAF::OrderedSet::OSNode:: OSNode(OSNode* next, OSNode* prev, int value) : next(n
 	//Két halmaz uniója +operátorral. Kommutatív
 	OAF::OrderedSet OAF::OrderedSet::operator+ (const OrderedSet& set) const
 	{
-		
+		return uni(set);
 	}
 	//Két halmaz különbsége -operátorral. Kommutatív
 	OAF::OrderedSet OAF::OrderedSet::operator- (const OrderedSet& set) const
 	{
-		
+		return min(set);
 	}
 	OAF::OrderedSet OAF::OrderedSet::operator+ (const std::set<int>& set) const
 	{
-		
+		return uni(set);
 	}
 	OAF::OrderedSet OAF::OrderedSet::operator- (const std::set<int>& set) const
 	{
-		
+		return min(set);
 	}
-	OAF::OrderedSet operator+ (std::set<int> const&, const OAF::OrderedSet& set)
+	OAF::OrderedSet operator+ (std::set<int> const& setA, const OAF::OrderedSet& setB)
 	{
-		
+		return setB.uni(setA);
 	}
-	OAF::OrderedSet operator- (std::set<int> const&, const OAF::OrderedSet& set)
+	OAF::OrderedSet operator- (std::set<int> const& setA, const OAF::OrderedSet& setB)
 	{
-		
+		return setB.min(setA);
 	}
 	
 	//|insert| művelet a következő formában: SET + 5 vagy 5 + SET
 	OAF::OrderedSet OAF::OrderedSet::operator+ (const int x) const
 	{
 		OrderedSet ret = *this;
-		ret.insert(x);
-		return ret;
+		return  ret.insert(x);
 	}
 	OAF::OrderedSet operator+ (const int x, const OAF::OrderedSet& set)
 	{
 		OAF::OrderedSet ret = set;
-		ret.insert(x);
-		return ret;
+		return  ret.insert(x);
 	}
 	//|erase| művelet a következő formában: SET - 5 vagy 5 - SET
 	OAF::OrderedSet OAF::OrderedSet::operator- (const int x) const
 	{
 		OrderedSet ret = *this;
-		ret.erase(x);
-		return ret;
+		return  ret.erase(x);
 	}
 	OAF::OrderedSet operator- (const int x, const OAF::OrderedSet& set)
 	{
 		OAF::OrderedSet ret = set;
-		ret.erase(x);
-		return ret;
+		return  ret.erase(x);
 	}
 	//|insert| művelet a következő formában: SET += 5
 	OAF::OrderedSet& OAF::OrderedSet::operator+= (const int x)
 	{
-		insert(x);
-		return *this;
+		return  insert(x);
 	}
 	//|erase| művelet a következő formában: SET -= 5
 	OAF::OrderedSet& OAF::OrderedSet::operator-= (const int x)
 	{
-		erase(x);
-		return *this;
+		return  erase(x);
 	}
 			
 	//A rendezett halmaz tartalmának átültetése ostream-be

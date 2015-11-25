@@ -65,18 +65,18 @@ namespace OAF
 			iterator begin();
 			const_iterator begin() const;
 			//Minden elemet töröl
-			void clear();
+			OrderedSet& clear();
 			//Megadja, hogy a halmaz üres-e
 			bool empty() const;
 			//ITERATOR - Az utolsó elemre mutató iterátorral tér visszaad
 			iterator end();
 			const_iterator end() const;
 			//Egy elemet töröl
-			void erase(const int&);
+			OrderedSet& erase(const int&);
 			//Megkeres egy elemet és visszaad egy rámutató iterátort
 			iterator find(const int&) const;
 			//Egy elem hozzáasdása létező listához
-			void insert(const int);
+			OrderedSet& insert(const int);
 			//Megadja, hogy egy szám eleme-e a halmaznak
 			bool isElement(int) const;
 			//Megadja az elemszámot
